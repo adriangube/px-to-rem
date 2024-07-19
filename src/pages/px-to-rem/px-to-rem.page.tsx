@@ -44,6 +44,21 @@ const getPxFromRem = (rem: string): string | undefined => {
   }
 }
 
+const allowedValues = [
+  '0',
+  '1', 
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  ',',
+  '.'
+];
+
 export const PxToRemPage = (): JSX.Element => {
   const DEFAULT_PX_UNIT = '16';
   const [defaultPxUnit, setDefaultPxUnit] = useState(DEFAULT_PX_UNIT);
@@ -52,20 +67,36 @@ export const PxToRemPage = (): JSX.Element => {
 
   const onPxChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value;
-    const parsedValue = newValue.replace(',', '.');
+
+    if (newValue) {
+      if (!allowedValues.includes(newValue.charAt(newValue.length - 1)))
+        return;
+      if (newValue.includes(".") && newValue.split(".").length > 2) return;
+      if (newValue.includes(".") && newValue.includes(",")) return;
+    }
+
+    const parsedValue = newValue
+      .replace(",", ".")
+      .replace("..", ".")
+      .replace(",,", ".")
+      .replace(" ", "");
+
     if (parsedValue) {
       setPx(parsedValue);
       setRem(getRemsFromPx(parsedValue));
     } else {
-      setPx(undefined);
-      setRem(undefined);
+      setPx('');
+      setRem('');
     }
   };
 
   const onRemChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value;
-    if (newValue.includes(".") && newValue.split('.').length > 2) return
-    if (newValue.includes(".") && newValue.includes(',')) return 
+    if (newValue) {
+      if (!allowedValues.includes(newValue.charAt(newValue.length - 1))) return;
+      if (newValue.includes(".") && newValue.split(".").length > 2) return;
+      if (newValue.includes(".") && newValue.includes(",")) return; 
+    }
       const parsedValue = newValue
         .replace(",", ".")
         .replace("..", ".")
@@ -77,8 +108,8 @@ export const PxToRemPage = (): JSX.Element => {
       setRem(parsedValue);
       setPx(getPxFromRem(parsedValue));
     } else {
-      setRem(undefined);
-      setPx(undefined);
+      setRem('');
+      setPx('');
     }
   };
 
@@ -89,14 +120,12 @@ export const PxToRemPage = (): JSX.Element => {
         type="text"
         value={px}
         step="0.1"
-        pattern="^[1-9]\d*(\.\d+)?$"
         placeholder="pixels"
         onChange={onPxChangeHandler}
       />
       <input
         type="text"
         value={rem}
-        pattern="^[1-9]\d*(\.\d+)?$"
         step="0.1"
         placeholder="rem"
         onChange={onRemChangeHandler}
