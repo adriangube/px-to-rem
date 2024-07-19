@@ -5,5 +5,5 @@ export default function Home() {
     <main>
       <PxToRemPage />
     </main>
-  );
+  )
 }

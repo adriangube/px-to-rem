@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
 
 
 export const metadata: Metadata = {
-  title: "PX to REM Calculator",
-  description: "PX to REM Calculator",
-};
+  title: 'PX to REM Calculator',
+  description: 'PX to REM Calculator',
+}
 
 export default function RootLayout({
   children,
@@ -17,5 +17,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
+  )
 }
