@@ -69,8 +69,7 @@ export const PxToRemPage = (): JSX.Element => {
     const newValue = (event.target as HTMLInputElement)?.value
 
     if (newValue) {
-      if (!allowedValues.includes(newValue.charAt(newValue.length - 1)))
-        return
+      if (!allowedValues.includes(newValue.charAt(newValue.length - 1))) return
       if (newValue.includes('.') && newValue.split('.').length > 2) return
       if (newValue.includes('.') && newValue.includes(',')) return
     }
@@ -92,6 +91,7 @@ export const PxToRemPage = (): JSX.Element => {
 
   const onRemChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
+    
     if (newValue) {
       if (!allowedValues.includes(newValue.charAt(newValue.length - 1))) return
       if (newValue.includes('.') && newValue.split('.').length > 2) return
