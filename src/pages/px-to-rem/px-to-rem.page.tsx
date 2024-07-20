@@ -1,116 +1,67 @@
 'use client'
 
 import React, { useState } from 'react'
+import { DEFAULT_PX_UNIT, getPxFromRem, getRemsFromPx, isValidValue } from '@/domain/pixel-to-rem'
 import styles from './px-to-rem.module.css'
-
-const hasMoreThanTwoDecimals = (num: number) =>
-  num.toString().split('.')[1]?.length > 2 || false
-
-
-const getRemsFromPx = (px: string): string | undefined => {
-  if (isNaN(Number(px))) {
-    throw new Error('The value introduced is not a valid number')
-  }
-  if (!px) return
-  try {
-    let result = Number(px) / 16
-    if (isNaN(result)) {
-      throw new Error('The value introduced is not a valid number')
-    }
-    return hasMoreThanTwoDecimals(result)
-      ? result.toFixed(2)
-      : result.toString()
-  } catch {
-    return
-  }
-}
-
-
-const getPxFromRem = (rem: string): string | undefined => {
-  if (isNaN(Number(rem))) {
-    throw new Error('The value introduced is not a valid number')
-  }
-  if(!rem) return
-  try {
-    let result = Number(rem) * 16
-    if (isNaN(result)) {
-      throw new Error('The value introduced is not a valid number')
-    }
-    return hasMoreThanTwoDecimals(result)
-      ? result.toFixed(2)
-      : result.toString()
-  } catch {
-    return 
-  }
-}
-
-const allowedValues = [
-  '0',
-  '1', 
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  ',',
-  '.'
-]
+import { cleanStringNumber } from '@/domain/utils'
 
 export const PxToRemPage = (): JSX.Element => {
-  // const DEFAULT_PX_UNIT = '16'
-  // const [defaultPxUnit, setDefaultPxUnit] = useState(DEFAULT_PX_UNIT)
+  const [defaultPxUnit, setDefaultPxUnit] = useState<number>(DEFAULT_PX_UNIT)
   const [px, setPx] = useState<string | undefined>('16')
   const [rem, setRem] = useState<string | undefined>('1')
+
+  const resetUnits = () => {
+    setPx('')
+    setRem('')
+  }
+
+  const setValueOrReset = (value: string, callback: Function) => {
+    const isValid = isValidValue(value)
+
+    if (isValid) {
+      const parsedValue = cleanStringNumber(value)
+
+      if (parsedValue) {
+        callback(parsedValue, defaultPxUnit)
+      } else {
+        resetUnits()
+      }
+    }
+  }
 
   const onPxChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
 
-    if (newValue) {
-      if (!allowedValues.includes(newValue.charAt(newValue.length - 1))) return
-      if (newValue.includes('.') && newValue.split('.').length > 2) return
-      if (newValue.includes('.') && newValue.includes(',')) return
+    const setValue = (newValue: string, unit: number) => {
+      setPx(newValue)
+      setRem(getRemsFromPx(newValue, unit))
     }
-
-    const parsedValue = newValue
-      .replace(',', '.')
-      .replace('..', '.')
-      .replace(',,', '.')
-      .replace(' ', '')
-
-    if (parsedValue) {
-      setPx(parsedValue)
-      setRem(getRemsFromPx(parsedValue))
-    } else {
-      setPx('')
-      setRem('')
-    }
+    setValueOrReset(newValue, setValue)
+  
   }
 
   const onRemChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
-    
-    if (newValue) {
-      if (!allowedValues.includes(newValue.charAt(newValue.length - 1))) return
-      if (newValue.includes('.') && newValue.split('.').length > 2) return
-      if (newValue.includes('.') && newValue.includes(',')) return 
+    const setValue = (newValue: string, unit: number) => {
+      setRem(newValue)
+      setPx(getPxFromRem(newValue, unit))
     }
-    const parsedValue = newValue
-      .replace(',', '.')
-      .replace('..', '.')
-      .replace(',,', '.')
-      .replace(' ', '')
-    
+    setValueOrReset(newValue, setValue)
+  }
 
-    if (parsedValue) {
-      setRem(parsedValue)
-      setPx(getPxFromRem(parsedValue))
-    } else {
-      setRem('')
-      setPx('')
+  const onDefaultPxToRemHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    const newValue = (event.target as HTMLInputElement)?.value
+    const isValid = isValidValue(newValue)
+    if (isValid) {
+      const parsedValue = cleanStringNumber(newValue)
+      const numericValue = Number(parsedValue)
+    
+      if (isNaN(numericValue)) {
+        throw new Error('The value introduced is not a valid number')
+      }
+      setDefaultPxUnit(numericValue)
     }
+    
   }
 
   return (
@@ -119,17 +70,26 @@ export const PxToRemPage = (): JSX.Element => {
       <input
         type="text"
         value={px}
-        step="0.1"
         placeholder="pixels"
         onChange={onPxChangeHandler}
       />
       <input
         type="text"
         value={rem}
-        step="0.1"
         placeholder="rem"
         onChange={onRemChangeHandler}
       />
+      <div>
+        <span>Default</span>
+        <input
+          type="text"
+          value={defaultPxUnit}
+          onChange={onDefaultPxToRemHandler}
+          step="0.1"
+          placeholder="pixels"
+        />
+        <span>px</span>
+      </div>
     </div>
   )
 }

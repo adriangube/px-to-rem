@@ -1,12 +1,16 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals"],
+  "plugins": ["simple-import-sort"],
   "rules": {
     "indent": ["error", 2],
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "semi": ["error", "never"],
     "quotes": ["error", "single"],
-    "sort-imports": "error",
     "no-unused-vars": "error",
     "max-len": ["error", { "code": 120 }]
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
   }
 }
