@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import { DEFAULT_PX_UNIT, getPxFromRem, getRemsFromPx } from '@/domain/pixel-to-rem'
-import styles from './px-to-rem.module.css'
 import { setValueGuard } from '@/domain/utils'
+import {ConverterLayout} from '@/components/converter-layout/converter-layout'
 
 export const PxToRemPage = (): JSX.Element => {
   const [defaultPxUnit, setDefaultPxUnit] = useState<number>(DEFAULT_PX_UNIT)
-  const [px, setPx] = useState<string | undefined>('16')
-  const [rem, setRem] = useState<string | undefined>('1')
+  const [px, setPx] = useState<string>('16')
+  const [rem, setRem] = useState<string>('1')
 
   const resetUnits = () => {
     setPx('')
@@ -41,7 +41,7 @@ export const PxToRemPage = (): JSX.Element => {
     setValueGuard(newValue, setValue, defaultPxUnit)
   }
 
-  const onDefaultPxToRemHandler = (event: React.FormEvent<HTMLInputElement>) => {
+  const onDefaultUnitChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
 
     const setValue = (value: string) => {
@@ -61,31 +61,16 @@ export const PxToRemPage = (): JSX.Element => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultPxUnit])
   return (
-    <div className={styles.px_to_rem_page__main}>
-      <h2>Px to Rem</h2>
-      <input
-        type="text"
-        value={px}
-        placeholder="pixels"
-        onChange={onPxChangeHandler}
-      />
-      <input
-        type="text"
-        value={rem}
-        placeholder="rem"
-        onChange={onRemChangeHandler}
-      />
-      <div>
-        <span>Default</span>
-        <input
-          type="text"
-          value={defaultPxUnit}
-          onChange={onDefaultPxToRemHandler}
-          step="0.1"
-          placeholder="pixels"
-        />
-        <span>px</span>
-      </div>
-    </div>
+    <ConverterLayout
+      firstUnit={px}
+      secondUnit={rem}
+      onFirstUnitChangeHandler={onPxChangeHandler}
+      onSecondUnitChangeHandler={onRemChangeHandler}
+      defaultConversionUnit={defaultPxUnit}
+      onDefaultConversionUnitChangeHandler={onDefaultUnitChangeHandler}
+      firstUnitLabel='Px'
+      secondUnitLabel='Rem'
+      defaultConversionUnitLabel='Px'
+    />
   )
 }

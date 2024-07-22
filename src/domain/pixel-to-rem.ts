@@ -2,13 +2,13 @@ import {includesDotAndComma, includesMoreThanOneDot, isLastCharacterValid} from 
 
 export const DEFAULT_PX_UNIT: number = 16
 
-export const getRemsFromPx = (px: string, unit: number = DEFAULT_PX_UNIT): string | undefined => {
+export const getRemsFromPx = (px: string, unit: number = DEFAULT_PX_UNIT): string => {
   if (isNaN(Number(px))) {
     throw new Error('The value introduced is not a valid number')
   }
-  if (!px) return
+  if (!px) return ''
   try {
-    let result = Number(px) / unit
+    const result = Number(px) / unit
     if (isNaN(result)) {
       throw new Error('The value introduced is not a valid number')
     }
@@ -16,17 +16,17 @@ export const getRemsFromPx = (px: string, unit: number = DEFAULT_PX_UNIT): strin
       ? result.toFixed(2)
       : result.toString()
   } catch {
-    return
+    return ''
   }
 }
 
-export const getPxFromRem = (rem: string, unit: number = DEFAULT_PX_UNIT): string | undefined => {
+export const getPxFromRem = (rem: string, unit: number = DEFAULT_PX_UNIT): string => {
   if (isNaN(Number(rem))) {
     throw new Error('The value introduced is not a valid number')
   }
-  if(!rem) return
+  if(!rem) return ''
   try {
-    let result = Number(rem) * unit
+    const result = Number(rem) * unit
     if (isNaN(result)) {
       throw new Error('The value introduced is not a valid number')
     }
@@ -34,7 +34,7 @@ export const getPxFromRem = (rem: string, unit: number = DEFAULT_PX_UNIT): strin
       ? result.toFixed(2)
       : result.toString()
   } catch {
-    return 
+    return ''
   }
 }
 
