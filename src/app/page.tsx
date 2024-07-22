@@ -1,9 +1,5 @@
-import { PxToRemPage } from '@/pages/px-to-rem/px-to-rem.page'
+import {redirect} from 'next/navigation'
 
 export default function Home() {
-  return (
-    <main>
-      <PxToRemPage />
-    </main>
-  )
+  redirect('/px-to-rem')
 }
