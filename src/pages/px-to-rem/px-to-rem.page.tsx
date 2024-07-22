@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
-import { DEFAULT_PX_UNIT, getPxFromRem, getRemsFromPx, isValidValue } from '@/domain/pixel-to-rem'
+import React, { useEffect, useState } from 'react'
+import { DEFAULT_PX_UNIT, getPxFromRem, getRemsFromPx } from '@/domain/pixel-to-rem'
 import styles from './px-to-rem.module.css'
-import { cleanStringNumber } from '@/domain/utils'
+import { setValueGuard } from '@/domain/utils'
 
 export const PxToRemPage = (): JSX.Element => {
   const [defaultPxUnit, setDefaultPxUnit] = useState<number>(DEFAULT_PX_UNIT)
@@ -14,56 +14,52 @@ export const PxToRemPage = (): JSX.Element => {
     setPx('')
     setRem('')
   }
-
-  const setValueOrReset = (value: string, callback: Function) => {
-    const isValid = isValidValue(value)
-
-    if (isValid) {
-      const parsedValue = cleanStringNumber(value)
-
-      if (parsedValue) {
-        callback(parsedValue, defaultPxUnit)
-      } else {
-        resetUnits()
-      }
-    }
-  }
-
   const onPxChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
 
     const setValue = (newValue: string, unit: number) => {
-      setPx(newValue)
-      setRem(getRemsFromPx(newValue, unit))
+      if (newValue) {
+        setPx(newValue)
+        setRem(getRemsFromPx(newValue, unit))
+      } else {
+        resetUnits()
+      }
     }
-    setValueOrReset(newValue, setValue)
-  
-  }
+    setValueGuard(newValue, setValue, defaultPxUnit)
 
+  }
   const onRemChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
     const setValue = (newValue: string, unit: number) => {
-      setRem(newValue)
-      setPx(getPxFromRem(newValue, unit))
+      if (newValue) {
+        setRem(newValue)
+        setPx(getPxFromRem(newValue, unit))
+      } else {
+        resetUnits()
+      }
     }
-    setValueOrReset(newValue, setValue)
+    setValueGuard(newValue, setValue, defaultPxUnit)
   }
 
   const onDefaultPxToRemHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement)?.value
-    const isValid = isValidValue(newValue)
-    if (isValid) {
-      const parsedValue = cleanStringNumber(newValue)
-      const numericValue = Number(parsedValue)
+
+    const setValue = (value: string) => {
+      const numericValue = Number(value)
     
       if (isNaN(numericValue)) {
         throw new Error('The value introduced is not a valid number')
       }
       setDefaultPxUnit(numericValue)
+      
     }
-    
+    setValueGuard(newValue, setValue)
   }
 
+  useEffect(() => {
+    onRemChangeHandler({target: { value: rem }} as unknown as React.FormEvent<HTMLInputElement>)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultPxUnit])
   return (
     <div className={styles.px_to_rem_page__main}>
       <h2>Px to Rem</h2>

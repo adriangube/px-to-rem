@@ -1,9 +1,11 @@
+import {isValidValue} from './pixel-to-rem'
+
 export const isLastCharacterValid = (value: string, allowedValues: string[]): boolean =>
   allowedValues.includes(value.charAt(value.length - 1))
 export const includesMoreThanOneDot = (value: string): boolean =>
   value.includes('.') && value.split('.').length > 2
 
-export const includesDotAndComa = (value: string): boolean => 
+export const includesDotAndComma = (value: string): boolean => 
   value.includes('.') && value.includes(',')
 
 export const cleanStringNumber = (value: string): string =>
@@ -13,3 +15,11 @@ export const cleanStringNumber = (value: string): string =>
     .replace(',,', '.')
     .replace(' ', '')
     
+export const setValueGuard = (value: string, callback: Function, ...args: any[]) => {
+  const isValid = isValidValue(value)
+
+  if (isValid) {
+    const parsedValue = cleanStringNumber(value)
+    callback(parsedValue, ...args)
+  }
+}

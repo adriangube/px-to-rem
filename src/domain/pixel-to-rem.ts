@@ -1,4 +1,4 @@
-import {includesDotAndComa, includesMoreThanOneDot, isLastCharacterValid} from './utils'
+import {includesDotAndComma, includesMoreThanOneDot, isLastCharacterValid} from './utils'
 
 export const DEFAULT_PX_UNIT: number = 16
 
@@ -60,7 +60,7 @@ export const isValidValue = (value: string) => {
   if (value) {
     if (!isLastCharacterValid(value, allowedValues)) return false
     if (includesMoreThanOneDot(value)) return false
-    if (includesDotAndComa(value)) return false
+    if (includesDotAndComma(value)) return false
   }
   return true
 }
