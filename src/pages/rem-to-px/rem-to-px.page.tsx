@@ -4,6 +4,7 @@ import React  from 'react'
 import { DEFAULT_PX_UNIT } from '@/domain/pixel-to-rem'
 import {ConverterLayout} from '@/components/converter-layout/converter-layout'
 import {useConverter} from '@/hooks/useConverter'
+import {AppRoutes} from '@/domain/routes'
 
 export const RemToPxPage = (): JSX.Element => {
   const {
@@ -29,6 +30,7 @@ export const RemToPxPage = (): JSX.Element => {
       firstUnitLabel='Rem'
       secondUnitLabel='Px'
       defaultConversionUnitLabel='Px'
+      switchRoute={AppRoutes.PX_TO_REM}
     />
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './converter-layout.module.css'
+import { useRouter } from 'next/navigation'
 
 export type ConverterLayoutProps = {
   firstUnit: string
@@ -11,6 +12,7 @@ export type ConverterLayoutProps = {
   firstUnitLabel: string
   secondUnitLabel: string
   defaultConversionUnitLabel: string
+  switchRoute: string
 }
 
 export const ConverterLayout = ({
@@ -22,8 +24,15 @@ export const ConverterLayout = ({
   onDefaultConversionUnitChangeHandler,
   firstUnitLabel,
   secondUnitLabel,
-  defaultConversionUnitLabel
+  defaultConversionUnitLabel,
+  switchRoute
 }: ConverterLayoutProps): JSX.Element => {
+  
+  const router = useRouter()
+  const onSwitchHandler = () => {
+    router.push(switchRoute)
+  }
+
   return (
     <div className={styles['converter-layout__main']}>
       <h2>{firstUnitLabel} to {secondUnitLabel}</h2>
@@ -33,6 +42,7 @@ export const ConverterLayout = ({
         placeholder={firstUnitLabel}
         onChange={onFirstUnitChangeHandler}
       />
+      <div onClick={onSwitchHandler}>Switch</div>
       <input
         type="text"
         value={secondUnit}
