@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-
+import './reset.css'
 
 export const metadata: Metadata = {
   title: 'PX to REM Calculator',
