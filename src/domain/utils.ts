@@ -15,7 +15,8 @@ export const cleanStringNumber = (value: string): string =>
     .replace(',,', '.')
     .replace(' ', '')
     
-export const setValueGuard = (value: string, callback: Function, ...args: any[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setValueGuard = (value: string, callback: (...args: any[]) => void, ...args: any[]) => {
   const isValid = isValidValue(value)
 
   if (isValid) {

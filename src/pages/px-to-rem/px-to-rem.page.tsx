@@ -6,7 +6,7 @@ import {ConverterLayout} from '@/components/converter-layout/converter-layout'
 import {useConverter} from '@/hooks/useConverter'
 import {AppRoutes} from '@/domain/routes'
 
-export const PxToRemPage = (): JSX.Element => {
+const PxToRemPage = (): JSX.Element => {
   const {
     first, 
     second,
@@ -34,3 +34,5 @@ export const PxToRemPage = (): JSX.Element => {
     />
   )
 }
+
+export default PxToRemPage
